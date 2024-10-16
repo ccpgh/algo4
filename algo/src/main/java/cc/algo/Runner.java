@@ -21,32 +21,6 @@ public class Runner {
         "z"
     };
 
-    @SuppressWarnings("unused")
-    String[] _ts_v2 = new String[] { 
-        "145",
-        "25",
-        "3",
-        "456",
-        "5",
-        "69",
-        "768",
-        "89",
-        "9"
-    };
-
-    @SuppressWarnings("unused")
-    String[] _ts_v3 = new String[] { 
-        "768",
-        "145",
-        "25",
-        "3",
-        "456",
-        "5",
-        "69",
-        "89",
-        "9"
-    };
-
     TOPSORT ts = new TOPSORT(_ts_v1);
 
     System.out.println("start grid: " + ts.grid());
@@ -69,9 +43,46 @@ public class Runner {
     }
   }
   
+  public void runSCC() {
+
+    String[] _scc_v1 = new String[] { 
+        "qstw",
+        "ruy",
+        "sv",
+        "txy",
+        "uy",
+        "vw",
+        "ws",
+        "xz",
+        "yq",
+        "zx"
+    };
+
+    SCC scc = new SCC(_scc_v1);
+
+    System.out.println("start grid: " + scc.grid());
+
+    if (!scc.solve()) {
+
+      System.out.println("status: failed");
+
+    } else {
+
+      System.out.println("final grid: " + scc.grid());
+
+      System.out.println("starts grid: " + scc.solution_starts());
+
+      System.out.println("stops grid: " + scc.solution_stops());
+
+      System.out.println("solution:   " + scc.solution());
+
+      System.out.println("status:   ok");
+    }
+  }
+  
   public void run() {
 
-    runTOPSORT();
+    runSCC();
   }  
 
   public static void main(String[] args) {
