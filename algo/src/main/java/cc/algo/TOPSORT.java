@@ -60,7 +60,7 @@ public class TOPSORT {
     
     u.start_time(_time);
 
-    System.out.println("grid: " + u.name() + " " + _time + " " + grid());
+    System.out.println("grid[" + _time + "]: name:" + u.name() + " " + grid());
 
     u.color(Vertex.COLOR.GRAY);
     

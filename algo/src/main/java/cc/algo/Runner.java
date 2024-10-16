@@ -21,7 +21,19 @@ public class Runner {
         "z"
     };
 
-    TOPSORT ts = new TOPSORT(_ts_v1);
+    String[] _ts_v2 = new String[] { 
+        "145",
+        "25",
+        "3",
+        "456",
+        "5",
+        "69",
+        "768",
+        "89",
+        "9"
+    };
+
+    TOPSORT ts = new TOPSORT(_ts_v2);
 
     System.out.println("start grid: " + ts.grid());
 
