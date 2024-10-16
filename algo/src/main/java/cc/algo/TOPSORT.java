@@ -1,7 +1,6 @@
 package cc.algo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -10,6 +9,8 @@ public class TOPSORT {
   final private LinkedHashMap<Vertex, List<Vertex>> _vertices = new LinkedHashMap<>();
 
   private String _solution = "";
+  
+  private int _time = 0;
 
   public TOPSORT(String[] lines) {
 
@@ -28,10 +29,59 @@ public class TOPSORT {
 
   private boolean dfs() {
     
+    for (Vertex v : _vertices.keySet()) {
+      
+      v.color(Vertex.COLOR.WHITE);
+      
+      v.pi(null);
+    }
+    
+    _time = 0;
+
+    System.out.println("grid: " + grid());
+
+    for (Vertex v : _vertices.keySet()) {
+      
+      if (v.color() == Vertex.COLOR.WHITE) {
+        
+        if (!dfs_visit(v)) {
+          
+          return false;
+        }
+      }
+    }
+    
     return true;
   }
 
-  private boolean dfs_visit() {
+  private boolean dfs_visit(Vertex u) {
+    
+    _time++;
+    
+    u.start_time(_time);
+
+    System.out.println("grid: " + u.name() + " " + _time + " " + grid());
+
+    u.color(Vertex.COLOR.GRAY);
+    
+    for (Vertex v : _vertices.get(u)) {
+      
+      if (v.color() == Vertex.COLOR.WHITE) {
+        
+        v.pi(u);
+        
+        if (!dfs_visit(v)) {
+          
+          return false;
+        }
+      }
+    }
+
+    u.color(Vertex.COLOR.BLACK);
+    
+    _time++;
+
+    u.end_time(_time);
     
     return true;
   }
@@ -50,18 +100,23 @@ public class TOPSORT {
     
     StringBuilder buffer = new StringBuilder();
     
-    buffer.append("{");
-    buffer.append("\n");
+    buffer.append("{\n");
     
-    for (Vertex vertex : _vertices.keySet()) {
+    for (Vertex u : _vertices.keySet()) {
 
-      buffer.append(vertex.toString());
+      buffer.append(u.toString());
+      
       buffer.append(" -> ");
 
-      _vertices.get(vertex).forEach(v->{
-        buffer.append(v.name());
-      });
-      
+      buffer.append("[");
+
+      for (Vertex v : _vertices.get(u)) {
+        
+        buffer.append(" " + v.name());
+      }
+            
+      buffer.append(" ]");
+
       buffer.append("\n");
     }
 
