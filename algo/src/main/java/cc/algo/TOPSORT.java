@@ -8,8 +8,12 @@ public class TOPSORT {
   
   final private LinkedHashMap<Vertex, List<Vertex>> _vertices = new LinkedHashMap<>();
 
+  private StringBuilder _solution_starts = new StringBuilder();
+
+  private StringBuilder _solution_stops = new StringBuilder();
+
   private String _solution = "";
-  
+
   private int _time = 0;
   
   public TOPSORT(String[] lines) {
@@ -17,9 +21,9 @@ public class TOPSORT {
     init(lines);
   }
 
-  private boolean topological_sort(List<Vertex> buffer) {
+  private boolean topological_sort(List<Vertex> starts, List<Vertex> stops) {
       
-    if (!dfs(buffer)) {
+    if (!dfs(starts, stops)) {
 
       return false;
     }
@@ -27,7 +31,7 @@ public class TOPSORT {
     return true;
   }
 
-  private boolean dfs(List<Vertex> buffer) {
+  private boolean dfs(List<Vertex> starts, List<Vertex> stops) {
     
     for (Vertex v : _vertices.keySet()) {
       
@@ -44,7 +48,7 @@ public class TOPSORT {
       
       if (v.color() == Vertex.COLOR.WHITE) {
         
-        if (!dfs_visit(v, buffer)) {
+        if (!dfs_visit(v, starts, stops)) {
           
           return false;
         }
@@ -54,23 +58,25 @@ public class TOPSORT {
     return true;
   }
 
-  private boolean dfs_visit(Vertex u, List<Vertex> buffer) {
+  private boolean dfs_visit(Vertex u, List<Vertex> starts, List<Vertex> stops) {
     
     _time++;
     
     u.start_time(_time);
 
-    System.out.println("grid[" + _time + "]: name:" + u.name() + " " + grid());
-
     u.color(Vertex.COLOR.GRAY);
-    
+
+    starts.add(0, u);
+
+    //System.out.println("grid[" + _time + "]: name:" + u.name() + " " + grid());
+
     for (Vertex v : _vertices.get(u)) {
       
       if (v.color() == Vertex.COLOR.WHITE) {
         
         v.pi(u);
         
-        if (!dfs_visit(v, buffer)) {
+        if (!dfs_visit(v, starts, stops)) {
           
           return false;
         }
@@ -78,51 +84,90 @@ public class TOPSORT {
     }
 
     u.color(Vertex.COLOR.BLACK);
-    
-    buffer.add(0, u);
+
+    //System.out.println("grid[" + _time + "]: name:" + u.name() + " " + grid());
+
+    stops.add(0, u);
     
     _time++;
 
     u.end_time(_time);
-    
+
+    //System.out.println("grid[" + _time + "]: name:" + u.name() + " " + grid());
+
     return true;
   }
 
   public boolean solve() {
 
-    List<Vertex> vertices = new ArrayList<>();
+    StringBuilder[] solutions = new StringBuilder[] { _solution_starts, _solution_stops };
     
-    StringBuilder buffer = new StringBuilder();
+    ArrayList<ArrayList<Vertex>> sorts = new ArrayList<>();
 
-    boolean result = topological_sort(vertices);
+    sorts.add(new ArrayList<Vertex>());
     
-    buffer.append("{\n");
+    sorts.add(new ArrayList<Vertex>());
+
+    boolean result = topological_sort(sorts.get(0), sorts.get(1));
     
-    for (Vertex u : vertices) {
-
-      buffer.append(u.toString());
-      
-      buffer.append(" -> ");
-
-      buffer.append("[");
-
-      for (Vertex v : _vertices.get(u)) {
-        
-        buffer.append(" " + v.name());
-      }
-            
-      buffer.append(" ]");
-
-      buffer.append("\n");
+    if (sorts.size() != sorts.size()) {
+    
+      return false;
     }
 
-    buffer.append("}");
+    for (int i = 0; i < sorts.size(); i++) {
     
+      ArrayList<Vertex> sort = sorts.get(i);
+      
+      StringBuilder buffer = new StringBuilder();
+
+      buffer.append("{\n");
+      
+      for (int j = 0; j < sort.size(); j++) {
+        
+        Vertex v = sort.get(j);
+      
+        buffer.append(v.toString());
+
+        buffer.append(" -> ");
+
+        for (Vertex u : _vertices.get(v)) {
+        
+          buffer.append(" " + u.name());
+        }
+
+        buffer.append(" ]\n");
+      }
+
+      buffer.append("}");
+      
+      solutions[i].setLength(0);
+
+      solutions[i].append(buffer.toString());
+    }
+      
+    StringBuilder buffer = new StringBuilder();
+
+    for (Vertex v : sorts.get(1)) {
+      
+      buffer.append(v.name() + " ");
+    }
+
     _solution = buffer.toString();
     
     return result;
   }
   
+  public String solution_starts() {
+    
+    return _solution_starts.toString();
+  }
+
+  public String solution_stops() {
+    
+    return _solution_stops.toString();
+  }
+
   public String solution() {
     
     return _solution;
@@ -179,8 +224,7 @@ public class TOPSORT {
         continue;
       }
       
-      for (int c : line.substring(1).chars().sorted().
-          toArray()) {
+      for (int c : line.substring(1).chars().sorted().toArray()) {
         
         _vertices.get(mapper.get(line.charAt(0))).add(
             mapper.get((char) c));
