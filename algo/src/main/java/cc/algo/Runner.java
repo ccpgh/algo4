@@ -58,25 +58,54 @@ public class Runner {
         "zx"
     };
 
-    SCC scc = new SCC(_scc_v1);
+    SCC scc1 = new SCC(_scc_v1);
 
-    System.out.println("start grid: " + scc.grid());
+    {
+      System.out.println("start grid: " + scc1.grid());
 
-    if (!scc.solve()) {
+      if (!scc1.solve()) {
 
-      System.out.println("status: failed");
+        System.out.println("status: failed");
 
-    } else {
+      } else {
 
-      System.out.println("final grid: " + scc.grid());
+        System.out.println("final grid: " + scc1.grid());
 
-      System.out.println("starts grid: " + scc.solution_starts());
+        System.out.println("starts grid: " + scc1.solution_starts());
 
-      System.out.println("stops grid: " + scc.solution_stops());
+        System.out.println("stops grid: " + scc1.solution_stops());
 
-      System.out.println("solution:   " + scc.solution());
+        System.out.println("solution:   " + scc1.solution());
 
-      System.out.println("status:   ok");
+        System.out.println("status:   ok");
+      }
+    }
+
+    {
+      String order = scc1.solution().replaceAll("\\s", "");
+
+      String[] _scc_v2 = Common.reorder(Common.transpose(_scc_v1), order);
+
+      SCC scc2 = new SCC(_scc_v2);
+
+      System.out.println("start grid: " + scc2.grid());
+
+      if (!scc2.solve()) {
+
+        System.out.println("status: failed");
+
+      } else {
+
+        System.out.println("final grid: " + scc2.grid());
+
+        System.out.println("starts grid: " + scc2.solution_starts());
+
+        System.out.println("stops grid: " + scc2.solution_stops());
+
+        System.out.println("solution:   " + scc2.solution());
+
+        System.out.println("status:   ok");
+      }
     }
   }
   

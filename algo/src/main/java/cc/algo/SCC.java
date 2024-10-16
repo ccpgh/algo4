@@ -99,8 +99,6 @@ public class SCC {
   }
 
   public boolean solve() {
-
-    StringBuilder[] solutions = new StringBuilder[] { _solution_starts, _solution_stops };
     
     ArrayList<ArrayList<Vertex>> sorts = new ArrayList<>();
 
@@ -108,12 +106,27 @@ public class SCC {
     
     sorts.add(new ArrayList<Vertex>());
 
-    boolean result = topological_sort(sorts.get(0), sorts.get(1));
+    if (!topological_sort(sorts.get(0), sorts.get(1))) {
+      
+      return false;
+    }
     
     if (sorts.size() != sorts.size()) {
     
       return false;
     }
+
+    if (!set_solutions(sorts)) {
+      
+      return false;
+    }
+    
+    return true;
+  }
+  
+  private boolean set_solutions(ArrayList<ArrayList<Vertex>> sorts) {
+  
+    StringBuilder[] solutions = new StringBuilder[] { _solution_starts, _solution_stops };
 
     for (int i = 0; i < sorts.size(); i++) {
     
@@ -155,7 +168,7 @@ public class SCC {
 
     _solution = buffer.toString();
     
-    return result;
+    return true;
   }
   
   public String solution_starts() {
