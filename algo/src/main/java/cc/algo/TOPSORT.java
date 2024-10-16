@@ -2,6 +2,7 @@ package cc.algo;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class TOPSORT {
@@ -11,15 +12,15 @@ public class TOPSORT {
   private String _solution = "";
   
   private int _time = 0;
-
+  
   public TOPSORT(String[] lines) {
 
     init(lines);
   }
 
-  private boolean topological_sort() {
-    
-    if (!dfs()) {
+  private boolean topological_sort(List<Vertex> buffer) {
+      
+    if (!dfs(buffer)) {
 
       return false;
     }
@@ -27,7 +28,7 @@ public class TOPSORT {
     return true;
   }
 
-  private boolean dfs() {
+  private boolean dfs(List<Vertex> buffer) {
     
     for (Vertex v : _vertices.keySet()) {
       
@@ -44,7 +45,7 @@ public class TOPSORT {
       
       if (v.color() == Vertex.COLOR.WHITE) {
         
-        if (!dfs_visit(v)) {
+        if (!dfs_visit(v, buffer)) {
           
           return false;
         }
@@ -54,7 +55,7 @@ public class TOPSORT {
     return true;
   }
 
-  private boolean dfs_visit(Vertex u) {
+  private boolean dfs_visit(Vertex u, List<Vertex> buffer) {
     
     _time++;
     
@@ -70,7 +71,7 @@ public class TOPSORT {
         
         v.pi(u);
         
-        if (!dfs_visit(v)) {
+        if (!dfs_visit(v, buffer)) {
           
           return false;
         }
@@ -78,6 +79,8 @@ public class TOPSORT {
     }
 
     u.color(Vertex.COLOR.BLACK);
+    
+    buffer.add(0, u);
     
     _time++;
 
@@ -88,7 +91,37 @@ public class TOPSORT {
 
   public boolean solve() {
 
-    return topological_sort();
+    List<Vertex> vertices = new ArrayList<>();
+    
+    StringBuilder buffer = new StringBuilder();
+
+    boolean result = topological_sort(vertices);
+    
+    buffer.append("{\n");
+    
+    for (Vertex u : vertices) {
+
+      buffer.append(u.toString());
+      
+      buffer.append(" -> ");
+
+      buffer.append("[");
+
+      for (Vertex v : _vertices.get(u)) {
+        
+        buffer.append(" " + v.name());
+      }
+            
+      buffer.append(" ]");
+
+      buffer.append("\n");
+    }
+
+    buffer.append("}");
+    
+    _solution = buffer.toString();
+    
+    return result;
   }
   
   public String solution() {
