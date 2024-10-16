@@ -2,7 +2,7 @@ package cc.algo;
 
 public class Vertex {
 
-  public enum COLOR { WHITE, BLACK };
+  public enum COLOR { UNKNOWN, BLACK, WHITE };
   
   final private Character _name;
 

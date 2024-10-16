@@ -23,7 +23,7 @@ public class Runner {
 
     TOPSORT ts = new TOPSORT(_ts_v1);
 
-    System.out.println("grid:     " + ts.grid());
+    System.out.println("grid: " + ts.grid());
 
     if (!ts.solve()) {
 

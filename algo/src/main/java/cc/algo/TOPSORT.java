@@ -7,17 +7,13 @@ import java.util.List;
 
 public class TOPSORT {
   
-  final private LinkedHashMap<Vertex, List<Vertex>> _adjacents = new LinkedHashMap<>();
+  final private LinkedHashMap<Vertex, List<Vertex>> _vertices = new LinkedHashMap<>();
 
-  final private String[] _ts;
-  
   private String _solution = "";
 
-  public TOPSORT(String[] ts) {
+  public TOPSORT(String[] lines) {
 
-    _ts = ts;
-    
-    init();
+    init(lines);
   }
 
   private boolean topological_sort() {
@@ -57,38 +53,51 @@ public class TOPSORT {
     buffer.append("{");
     buffer.append("\n");
     
-    _adjacents.keySet().forEach(key->{
-      buffer.append(key.toString());
+    for (Vertex vertex : _vertices.keySet()) {
+
+      buffer.append(vertex.toString());
       buffer.append(" -> ");
-      _adjacents.get(key).forEach(v->{
+
+      _vertices.get(vertex).forEach(v->{
         buffer.append(v.name());
       });
+      
       buffer.append("\n");
-    });
+    }
 
     buffer.append("}");
 
     return buffer.toString();
   }
 
-  private void init() {
+  private void init(String[] lines) {
     
     LinkedHashMap<Character, Vertex> mapper = 
         new LinkedHashMap<>();
         
-    Arrays.asList(_ts).forEach(line->{
+    for (String line : lines) {
+      
       Vertex vertex = new Vertex(line.charAt(0), 
-          Vertex.COLOR.WHITE);
-      _adjacents.put(vertex, new ArrayList<>());
+          Vertex.COLOR.UNKNOWN);
+      
+      _vertices.put(vertex, new ArrayList<>());
+      
       mapper.put(vertex.name(), vertex);
-    });
+    }
 
-    Arrays.asList(_ts).forEach(line->{
-      if (line.length() > 1) {
-        line.substring(1).chars().sorted().forEach(c->{        
-          _adjacents.get(mapper.get(line.charAt(0))).add(mapper.get((char) c));
-        });
+    for (String line : lines) {
+
+      if (line.length() < 2) {
+        
+        continue;
       }
-    });
+      
+      for (int c : line.substring(1).chars().sorted().
+          toArray()) {
+        
+        _vertices.get(mapper.get(line.charAt(0))).add(
+            mapper.get((char) c));
+      }
+    }
   }  
 }
