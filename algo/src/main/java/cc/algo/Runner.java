@@ -112,9 +112,40 @@ public class Runner {
     }
   }
   
+  public void runDIJKSTRA() {
+      
+    String[] _d_v1 = new String[] { 
+        "qstw",
+        "ruy",
+        "sv",
+        "txy",
+        "uy",
+        "vw",
+        "ws",
+        "xz",
+        "yq",
+        "zx"
+    };
+
+    DIJKSTRA d = new DIJKSTRA(_d_v1);
+
+    {
+      System.out.println("start grid: " + d.grid());
+
+      if (!d.solve()) {
+
+        System.out.println("status: failed");
+
+      } else {
+
+        System.out.println("status: ok");
+      }
+    }
+  }
+  
   public void run() {
 
-    runSCC();
+    runDIJKSTRA();
   }  
 
   public static void main(String[] args) {
