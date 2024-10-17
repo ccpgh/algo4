@@ -102,7 +102,11 @@ public class Runner {
 
         System.out.println("stops grid: " + scc2.solution_stops());
 
-        System.out.println("solution:   " + scc2.solution());
+        String[] partitions = scc2.partition();
+        
+        System.out.println("partitions: start count = " + partitions.length);
+
+        System.out.println("partitions: stop");
 
         System.out.println("status:   ok");
       }

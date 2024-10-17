@@ -244,4 +244,10 @@ public class SCC {
       }
     }
   }  
+  
+  public String[] partition() {
+    
+    return new String[] {};
+  }
+  
 }
