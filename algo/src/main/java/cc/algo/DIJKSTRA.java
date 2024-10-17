@@ -1,5 +1,9 @@
 package cc.algo;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class DIJKSTRA {
@@ -8,6 +12,8 @@ public class DIJKSTRA {
   
   final private LinkedHashMap<Vertex, LinkedHashMap<Vertex, Integer>> _vertices = new LinkedHashMap<>();
 
+  final private LinkedHashMap<Vertex, Integer> _scores = new LinkedHashMap<Vertex, Integer>();
+      
   public DIJKSTRA(String[] lines) {
 
     init(lines);
@@ -15,7 +21,102 @@ public class DIJKSTRA {
 
   public boolean solve() {
     
+    if (!dijkstra()) {
+      
+      return false;
+    }
+    
+    return true;
+  }
+  
+  private boolean relax(Vertex u, Vertex v, Integer w) {
+    
+    //RELAX (u. v, w)
+    //1 if v.d > u.d + w(u,v) 
+    //2 v.d = u.d + w(u,v) 
+    //3 v.PI=u
+
     return false;
+  }
+
+  private boolean initialize_single_source() {
+
+    System.out.println("initialize single source");
+   
+    for (Vertex v : _scores.keySet()) {
+
+      if (v.name() == ((Vertex) (_vertices.keySet().toArray()[0])).name()) {
+        
+        _scores.put(v, 0);
+        
+        continue;
+      }
+
+      _scores.put(v, Integer.MAX_VALUE);
+    }
+    
+    System.out.println("grid: " + grid());
+
+    return true;
+  }
+
+  private Vertex extract_min(Set<Vertex> Q) {
+    
+    Vertex v = null;
+    
+    int min = Integer.MAX_VALUE;
+
+    for (Vertex u : Q) {
+      
+      if (_scores.get(u) < min || v == null) {
+       
+        v = u;
+        
+        min = _scores.get(u);
+      }
+    }
+    
+    if (v != null) {
+
+      Q.remove(v);
+    }
+
+    return v;
+  }
+  
+  public boolean dijkstra() {
+
+    if (!initialize_single_source()) {
+      
+      return false;
+    }
+    
+    Set<Vertex> S = new HashSet<Vertex>();
+
+    Set<Vertex> Q = new HashSet<Vertex>();
+
+    for (Vertex w : _vertices.keySet()) {
+
+      Q.add(w);
+    }
+    
+    while(!Q.isEmpty()) {
+
+      Vertex v = extract_min(Q);
+      
+      S.add(v);
+      
+      for (Vertex u : _vertices.get(v).keySet()) {
+
+        Integer w = _vertices.get(v).get(u);
+        
+        relax(u, v, w);
+      }
+
+      System.out.println("grid: " + grid());
+    }
+    
+    return true;
   }
   
   public String solution() {
@@ -31,9 +132,20 @@ public class DIJKSTRA {
     
     for (Vertex u : _vertices.keySet()) {
 
-      buffer.append(u.toString());
+      buffer.append(u.name());
+
+      buffer.append("( d = ");
+
+      buffer.append(_scores.get(u));
+
+      buffer.append(" p = ");
+
+      if (u.pi() != null) {
+        
+        buffer.append(u.pi());
+      }
       
-      buffer.append(" -> ");
+      buffer.append(") -> ");
 
       buffer.append("[");
       
@@ -74,6 +186,8 @@ public class DIJKSTRA {
       _vertices.put(vertex, new LinkedHashMap<>());
       
       mapper.put(vertex.name(), vertex);
+      
+      _scores.put(vertex, 0);
     }
 
     for (String line : lines) {
