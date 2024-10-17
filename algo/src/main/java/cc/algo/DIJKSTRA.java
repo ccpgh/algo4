@@ -75,6 +75,8 @@ public class DIJKSTRA {
     if (v != null) {
 
       Q.remove(v);
+      
+      System.out.println("EXTRACT MIN: " + v.name() + " [ D = " + _scores.get(v) + " ]");
     }
 
     return v;
