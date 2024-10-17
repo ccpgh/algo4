@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,8 +13,27 @@ import java.util.HashSet;
 public class Common {
 
   static public String[] reorder(String[] lines, String order) {
-    
-    return new String[] {};
+
+    Map<Character, String> lookup = new HashMap<Character, String>();
+
+    ArrayList<String> buffer = new ArrayList<>();
+
+    if (lines.length != order.length()) {
+      
+      throw new IllegalArgumentException("bad arguments");
+    }
+
+    for (String line : lines) {
+      
+      lookup.put(line.charAt(0), line);
+    }
+          
+    for (int c : order.chars().toArray()) {
+
+      buffer.add(lookup.get((char) c));
+    }      
+
+    return buffer.toArray(new String[buffer.size()]);
   }
   
   static public String[] transpose(String[] lines) {
