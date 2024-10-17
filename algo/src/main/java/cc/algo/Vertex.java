@@ -23,7 +23,7 @@ public class Vertex {
     this(name, color, false);
   }
   
-  public Vertex(char name, COLOR color, boolean extended) {
+  private Vertex(char name, COLOR color, boolean extended) {
     
     _name = name;
     
@@ -37,10 +37,10 @@ public class Vertex {
     return _name;
   }
 
-  public int nameI() {
-    
-    return (int) _name;
-  }
+  //public int nameI() {
+  //  
+  //  return (int) _name;
+  //}
 
   public COLOR color() {
     
