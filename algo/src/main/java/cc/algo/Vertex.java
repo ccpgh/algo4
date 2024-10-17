@@ -72,28 +72,26 @@ public class Vertex {
     
     buffer.append("{ ");
     buffer.append(_name);
-    buffer.append(" color: ");
     
     switch (_color) {
 
     case BLACK:
-      buffer.append("BLACK");
+      buffer.append(" color: BLACK");
       break;
 
     case GRAY:
-      buffer.append("GRAY ");
+      buffer.append(" color: GRAY");
       break;
 
     case WHITE:
-      buffer.append("WHITE");
+      buffer.append(" color: WHITE");
       break;
 
     case UNKNOWN:
-      buffer.append("     ");
       break;
 
     default:
-      buffer.append(_color);
+      buffer.append(" color: " + _color);
     } 
 
     buffer.append(" ts[");
