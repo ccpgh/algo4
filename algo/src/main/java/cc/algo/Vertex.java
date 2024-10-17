@@ -129,7 +129,7 @@ public class Vertex {
     buffer.append("]");
 
     buffer.append(" pi: ");
-    
+
     buffer.append(_PI != null ? _PI.name() : " ");
     
     buffer.append(" }");    

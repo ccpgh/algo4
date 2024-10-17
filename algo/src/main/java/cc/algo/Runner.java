@@ -112,7 +112,7 @@ public class Runner {
     }
   }
   
-  public void runDIJKSTRA() {
+  public void runDIJKSTRA1() {
       
     String[] _d_v1 = new String[] { 
         "s.t/3.y/5",
@@ -125,7 +125,33 @@ public class Runner {
     DIJKSTRA d = new DIJKSTRA(_d_v1);
 
     {
-      System.out.println("start grid: " + d.grid());
+      System.out.println("\nINITED grid: " + d.grid());
+
+      if (!d.solve()) {
+
+        System.out.println("status: failed");
+
+      } else {
+
+        System.out.println("status: ok");
+      }
+    }
+  }
+
+  public void runDIJKSTRA2() {
+    
+    String[] _d_v2 = new String[] { 
+        "t.x/6.y/2",
+        "s.t/3.y/5",
+        "x.z/2",
+        "z.s/3.x/7",
+        "y.t/1.x/4.z/6"        
+    };
+
+    DIJKSTRA d = new DIJKSTRA(_d_v2);
+
+    {
+      System.out.println("\nINITED grid: " + d.grid());
 
       if (!d.solve()) {
 
@@ -140,7 +166,9 @@ public class Runner {
   
   public void run() {
 
-    runDIJKSTRA();
+    //runDIJKSTRA1();
+    
+    runDIJKSTRA2();
   }  
 
   public static void main(String[] args) {

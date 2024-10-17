@@ -1,9 +1,7 @@
 package cc.algo;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class DIJKSTRA {
@@ -31,18 +29,18 @@ public class DIJKSTRA {
   
   private boolean relax(Vertex u, Vertex v, Integer w) {
     
-    //RELAX (u. v, w)
-    //1 if v.d > u.d + w(u,v) 
-    //2 v.d = u.d + w(u,v) 
-    //3 v.PI=u
-
+    if (_scores.get(v) > _scores.get(u) + w) {
+      
+      _scores.put(v, _scores.get(u) + w);
+      
+      v.pi(u);
+    }
+      
     return false;
   }
 
   private boolean initialize_single_source() {
 
-    System.out.println("initialize single source");
-   
     for (Vertex v : _scores.keySet()) {
 
       if (v.name() == ((Vertex) (_vertices.keySet().toArray()[0])).name()) {
@@ -55,8 +53,6 @@ public class DIJKSTRA {
       _scores.put(v, Integer.MAX_VALUE);
     }
     
-    System.out.println("grid: " + grid());
-
     return true;
   }
 
@@ -100,8 +96,14 @@ public class DIJKSTRA {
       Q.add(w);
     }
     
-    while(!Q.isEmpty()) {
+    System.out.println("\nADJACENCY LIST: " + grid());
+    
+    System.out.println("Q: " + fold(Q));
 
+    System.out.println("S: " + fold(S));      
+
+    while(!Q.isEmpty()) {
+      
       Vertex v = extract_min(Q);
       
       S.add(v);
@@ -110,11 +112,17 @@ public class DIJKSTRA {
 
         Integer w = _vertices.get(v).get(u);
         
-        relax(u, v, w);
+        relax(v, u, w);
       }
 
-      System.out.println("grid: " + grid());
+      System.out.println("\nADJACENCY LIST: " + grid());
+      
+      System.out.println("Q: " + fold(Q));
+
+      System.out.println("S: " + fold(S));      
     }
+    
+    System.out.println("");
     
     return true;
   }
@@ -134,20 +142,35 @@ public class DIJKSTRA {
 
       buffer.append(u.name());
 
-      buffer.append("( d = ");
+      buffer.append(" [ D = ");
 
-      buffer.append(_scores.get(u));
+      if (_scores.get(u) < Integer.MAX_VALUE) {
 
-      buffer.append(" p = ");
+        if (_scores.get(u) < 10) {
+          
+          buffer.append(" ");
+        }
+        
+        buffer.append(" " + _scores.get(u));
+      } else {
+        
+        buffer.append("INF");
+      }
+
+      buffer.append("  PI = ");
 
       if (u.pi() != null) {
         
-        buffer.append(u.pi());
+        buffer.append(u.pi().name());
+      
+      } else {
+        
+        buffer.append(" ");
       }
       
-      buffer.append(") -> ");
+      buffer.append(" ] -> ");
 
-      buffer.append("[");
+      buffer.append(" {");
       
       LinkedHashMap<Vertex, Integer> children = _vertices.get(u);
       
@@ -156,7 +179,7 @@ public class DIJKSTRA {
         buffer.append(" " + v.name() + "(" + children.get(v) + ")");
       }
             
-      buffer.append(" ]");
+      buffer.append(" }");
 
       buffer.append("\n");
     }
@@ -217,5 +240,21 @@ public class DIJKSTRA {
         map.put(v, w);
       }
     }
+  } 
+  
+  private String fold(Set<Vertex> vs) {
+
+    StringBuilder buffer = new StringBuilder();
+    
+    buffer.append("[");
+    
+    for (Vertex v : vs) {
+      
+      buffer.append(" " + v.name());
+    }
+    
+    buffer.append(" ]");
+    
+    return buffer.toString();
   }  
 }
