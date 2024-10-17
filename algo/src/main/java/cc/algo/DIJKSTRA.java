@@ -36,10 +36,12 @@ public class DIJKSTRA {
       buffer.append(" -> ");
 
       buffer.append("[");
-
-      for (Vertex v : _vertices.get(u).keySet()) {
+      
+      LinkedHashMap<Vertex, Integer> children = _vertices.get(u);
+      
+      for (Vertex v : children.keySet()) {
         
-        buffer.append(" " + v.nameI());
+        buffer.append(" " + v.name() + "(" + children.get(v) + ")");
       }
             
       buffer.append(" ]");
@@ -54,21 +56,24 @@ public class DIJKSTRA {
 
   private void init(String[] lines) {
     
-    LinkedHashMap<Integer, Vertex> mapper = 
+    LinkedHashMap<Character, Vertex> mapper = 
         new LinkedHashMap<>();
         
     for (String line : lines) {
 
       String[] splits = line.split("\\.");
       
-      System.out.println("splits " + splits.length + " from '" + line + "'");
-
-      Vertex vertex = new Vertex((char) (Integer.parseInt(splits[0])), 
-          Vertex.COLOR.UNKNOWN, true);
+      if (splits[0].length() != 1) {
+        
+        throw new IllegalArgumentException("bad parameter");
+      }
+      
+      Vertex vertex = new Vertex(splits[0].charAt(0), 
+          Vertex.COLOR.UNKNOWN);
       
       _vertices.put(vertex, new LinkedHashMap<>());
       
-      mapper.put(vertex.nameI(), vertex);
+      mapper.put(vertex.name(), vertex);
     }
 
     for (String line : lines) {
@@ -82,24 +87,18 @@ public class DIJKSTRA {
 
       for (int i = 1; i < splits.length; i++) {
         
-        String[] pair = splits[i].split("/"); // v.nameI and directional weight 
+        String[] pair = splits[i].split("/"); // v.name and directional weight 
         
         if (pair.length != 2) {
           
-          throw new IllegalArgumentException("bad configuration");
+          throw new IllegalArgumentException("bad parameter");
         }
         
-        LinkedHashMap<Vertex, Integer> map = _vertices.get(mapper.get(Integer.parseInt(splits[0])));
+        LinkedHashMap<Vertex, Integer> map = _vertices.get(mapper.get(splits[0].charAt(0)));
         
-        Vertex v = mapper.get(Integer.parseInt(pair[0]));
+        Vertex v = mapper.get(pair[0].charAt(0));
         
         Integer w = Integer.parseInt(pair[1]);
-        
-        System.out.println(map.toString());
-
-        System.out.println(v.toString());
-
-        System.out.println(w);
         
         map.put(v, w);
       }

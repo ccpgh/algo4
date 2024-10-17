@@ -115,9 +115,11 @@ public class Runner {
   public void runDIJKSTRA() {
       
     String[] _d_v1 = new String[] { 
-        "1.11/101.21/102",
-        "11",
-        "21"
+        "s.t/3.y/5",
+        "t.x/6.y/2",
+        "x.z/2",
+        "z.s/3.x/7",
+        "y.t/1.x/4.z/6"        
     };
 
     DIJKSTRA d = new DIJKSTRA(_d_v1);
