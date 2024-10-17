@@ -1,14 +1,12 @@
 package cc.algo;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class DIJKSTRA {
 
   private String _solution = "";
   
-  final private LinkedHashMap<Vertex, List<Vertex>> _vertices = new LinkedHashMap<>();
+  final private LinkedHashMap<Vertex, LinkedHashMap<Vertex, Integer>> _vertices = new LinkedHashMap<>();
 
   public DIJKSTRA(String[] lines) {
 
@@ -39,9 +37,9 @@ public class DIJKSTRA {
 
       buffer.append("[");
 
-      for (Vertex v : _vertices.get(u)) {
+      for (Vertex v : _vertices.get(u).keySet()) {
         
-        buffer.append(" " + v.name());
+        buffer.append(" " + v.nameI());
       }
             
       buffer.append(" ]");
@@ -56,30 +54,54 @@ public class DIJKSTRA {
 
   private void init(String[] lines) {
     
-    LinkedHashMap<Character, Vertex> mapper = 
+    LinkedHashMap<Integer, Vertex> mapper = 
         new LinkedHashMap<>();
         
     for (String line : lines) {
+
+      String[] splits = line.split("\\.");
       
-      Vertex vertex = new Vertex(line.charAt(0), 
-          Vertex.COLOR.UNKNOWN);
+      System.out.println("splits " + splits.length + " from '" + line + "'");
+
+      Vertex vertex = new Vertex((char) (Integer.parseInt(splits[0])), 
+          Vertex.COLOR.UNKNOWN, true);
       
-      _vertices.put(vertex, new ArrayList<>());
+      _vertices.put(vertex, new LinkedHashMap<>());
       
-      mapper.put(vertex.name(), vertex);
+      mapper.put(vertex.nameI(), vertex);
     }
 
     for (String line : lines) {
 
-      if (line.length() < 2) {
+      String[] splits = line.split("\\.");
+
+      if (splits.length < 2) {
         
         continue;
       }
-      
-      for (int c : line.substring(1).chars().sorted().toArray()) {
+
+      for (int i = 1; i < splits.length; i++) {
         
-        _vertices.get(mapper.get(line.charAt(0))).add(
-            mapper.get((char) c));
+        String[] pair = splits[i].split("/"); // v.nameI and directional weight 
+        
+        if (pair.length != 2) {
+          
+          throw new IllegalArgumentException("bad configuration");
+        }
+        
+        LinkedHashMap<Vertex, Integer> map = _vertices.get(mapper.get(Integer.parseInt(splits[0])));
+        
+        Vertex v = mapper.get(Integer.parseInt(pair[0]));
+        
+        Integer w = Integer.parseInt(pair[1]);
+        
+        System.out.println(map.toString());
+
+        System.out.println(v.toString());
+
+        System.out.println(w);
+        
+        map.put(v, w);
       }
     }
   }  

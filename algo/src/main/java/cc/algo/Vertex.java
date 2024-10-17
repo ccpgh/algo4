@@ -5,6 +5,10 @@ public class Vertex {
   public enum COLOR { UNKNOWN, BLACK, WHITE, GRAY };
   
   final private Character _name;
+  
+  // NOTE: added so not to waste time rewriting this to use string not char names.
+  // TODO fix
+  final private boolean _extended; 
 
   private Vertex _PI = null;
   
@@ -16,16 +20,28 @@ public class Vertex {
   
   public Vertex(char name, COLOR color) {
     
+    this(name, color, false);
+  }
+  
+  public Vertex(char name, COLOR color, boolean extended) {
+    
     _name = name;
     
     _color = color;
+    
+    _extended = extended;
   }
-  
+
   public Character name() {
     
     return _name;
   }
-  
+
+  public int nameI() {
+    
+    return (int) _name;
+  }
+
   public COLOR color() {
     
     return _color;
@@ -71,7 +87,15 @@ public class Vertex {
     StringBuilder buffer = new StringBuilder();
     
     buffer.append("{ ");
-    buffer.append(_name);
+    
+    if (!_extended) {
+     
+      buffer.append(_name);
+    
+    } else {
+      
+      buffer.append((int) (_name));
+    }
     
     switch (_color) {
 
