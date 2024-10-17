@@ -1,13 +1,17 @@
 package cc.algo;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 public class SCC {
 
   final private LinkedHashMap<Vertex, List<Vertex>> _vertices = new LinkedHashMap<>();
 
+  final private String _name;
+  
   private StringBuilder _solution_starts = new StringBuilder();
 
   private StringBuilder _solution_stops = new StringBuilder();
@@ -16,8 +20,10 @@ public class SCC {
 
   private int _time = 0;
   
-  public SCC(String[] lines) {
+  public SCC(String[] lines, String name) {
 
+    _name = name;
+    
     init(lines);
   }
 
@@ -42,7 +48,7 @@ public class SCC {
     
     _time = 0;
 
-    System.out.println("grid: " + grid());
+    System.out.println("grid " + _name + ": " + grid());
 
     for (Vertex v : _vertices.keySet()) {
       
@@ -68,7 +74,7 @@ public class SCC {
 
     starts.add(0, u);
 
-    //System.out.println("grid[" + _time + "]: name:" + u.name() + " " + grid());
+    //System.out.println("grid " + _name + "[" + _time + "]: name:" + u.name() + " " + grid());
 
     for (Vertex v : _vertices.get(u)) {
       
@@ -85,7 +91,7 @@ public class SCC {
 
     u.color(Vertex.COLOR.BLACK);
 
-    //System.out.println("grid[" + _time + "]: name:" + u.name() + " " + grid());
+    //System.out.println("grid " + _name + "[" + _time + "]: name:" + u.name() + " " + grid());
 
     stops.add(0, u);
     
@@ -93,7 +99,7 @@ public class SCC {
 
     u.end_time(_time);
 
-    //System.out.println("grid[" + _time + "]: name:" + u.name() + " " + grid());
+    //System.out.println("grid " + _name + "[" + _time + "]: name:" + u.name() + " " + grid());
 
     return true;
   }
@@ -245,9 +251,60 @@ public class SCC {
     }
   }  
   
-  public String[] partition() {
+  public StringBuilder[] partition() {
     
-    return new String[] {};
+    Set<Vertex> vertices = new HashSet<Vertex>();
+
+    List<StringBuilder> result = new ArrayList<>();
+    
+    _vertices.keySet().stream().forEach(v->{ vertices.add(v); });
+
+    for (Vertex v : _vertices.keySet()) {
+
+      if (v.pi() == null) {
+        
+        vertices.remove(v);
+      
+        StringBuilder buffer = new StringBuilder();
+
+        buffer.append(v.name());
+        
+        result.add(buffer);
+        
+        partition(v, buffer, vertices);
+      }
+    }
+    
+    return result.toArray(new StringBuilder[result.size()]);
+  }
+
+  public void partition(Vertex v, StringBuilder buffer, Set<Vertex> vertices) {
+
+    boolean found = true;
+    
+    while (found) {
+
+      found = false;
+      
+      for (Vertex w : vertices) {
+       
+        if (w.pi() != null &&
+            w.pi().name() == v.name()) {
+
+          vertices.remove(v);
+          
+          buffer.append(" -> ");
+
+          buffer.append(w.name());
+          
+          found = true;
+          
+          partition(w, buffer, vertices);
+          
+          return;
+        }
+      }
+    } 
   }
   
 }
